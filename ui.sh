@@ -9,7 +9,7 @@ sudo apt install git nodejs npm -y
 # sudo mv /etc/nginx/sites-enabled/proxy /etc/nginx/sites-enabled/default
 # sudo service nginx restart
 
-git clone https://github.com/juan-ruiz/movie-analyst-ui.git
+git clone https://github.com/juan-bol/movie-analyst-ui.git
 cd movie-analyst-ui/
 npm install
 node server.js &
