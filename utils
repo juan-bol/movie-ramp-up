@@ -1,0 +1,7 @@
+sed -i -e 's/\r$//' data/ui.sh
+bash data/ui.sh
+
+sed -i -e 's/\r$//' data/api.sh
+bash data/api.sh
+
+ps -ef | grep SCREEN  | awk '{print "sudo kill -9 " $2}' | bash

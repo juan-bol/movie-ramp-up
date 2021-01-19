@@ -1,0 +1,1 @@
+{"virtualbox":{"/home/vagrant/data":{"guestpath":"/home/vagrant/data","hostpath":"C:/Users/jbolanosr/Desktop/rampup/ramp-up/data","disabled":false,"__vagrantfile":true},"/vagrant":{"guestpath":"/vagrant","hostpath":"C:/Users/jbolanosr/Desktop/rampup/ramp-up","disabled":false,"__vagrantfile":true}}}
