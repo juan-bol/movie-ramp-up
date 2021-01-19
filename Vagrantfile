@@ -2,19 +2,19 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-    os = "bento/ubuntu-18.04"
-    net_ip = "192.158.1"
+    os = "peru/ubuntu-18.04-server-amd64"
+    net_ip = "192.168.100"
 
     servers = [
         {
             :hostname => "api",
-            :ip => ".1",
+            :ip => ".11",
             :ssh_port => "2201",
             :provision_file => "./api.sh"
         },
         {
             :hostname => "ui",
-            :ip => ".2",
+            :ip => ".12",
             :ssh_port => "2202",
             :provision_file => "./ui.sh"
         }
