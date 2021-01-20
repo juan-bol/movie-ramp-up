@@ -6,17 +6,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     net_ip = "192.168.100"
 
     servers = [
+        # {
+        #     :hostname => "api",
+        #     :ip => ".11",
+        #     :ssh_port => "2201",
+        #     :provision_file => "./provision/api.sh"
+        # },
+        # {
+        #     :hostname => "ui",
+        #     :ip => ".12",
+        #     :ssh_port => "2202",
+        #     :provision_file => "./provision/ui.sh"
+        # },
         {
-            :hostname => "api",
-            :ip => ".11",
-            :ssh_port => "2201",
-            :provision_file => "./api.sh"
-        },
-        {
-            :hostname => "ui",
-            :ip => ".12",
-            :ssh_port => "2202",
-            :provision_file => "./ui.sh"
+            :hostname => "bd",
+            :ip => ".13",
+            :ssh_port => "2203",
+            :provision_file => "./provision/bd.sh"
         }
     ]
 
@@ -30,7 +36,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             node.vm.provision "shell", path: machine[:provision_file]
 
             node.vm.provider :virtualbox do |vb|
-                vb.memory = "1204"
+                vb.memory = "512"
                 vb.cpus = 1
             end
         end
