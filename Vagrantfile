@@ -6,12 +6,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     net_ip = "192.168.100"
 
     servers = [
-        # {
-        #     :hostname => "api",
-        #     :ip => ".11",
-        #     :ssh_port => "2201",
-        #     :provision_file => "./provision/api.sh"
-        # },
+        {
+            :hostname => "api",
+            :ip => ".11",
+            :ssh_port => "2201",
+            :provision_file => "./provision/api.sh"
+        },
         # {
         #     :hostname => "ui",
         #     :ip => ".12",
