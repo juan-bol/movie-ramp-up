@@ -30,6 +30,7 @@ sed -i 's/bind-address/#bind-address/' /etc/mysql/mariadb.conf.d/50-server.cnf
 ROOT_PASSWORD=holi
 mysql -u root -e "UPDATE mysql.user SET Password=PASSWORD('$ROOT_PASSWORD') WHERE User='root';"
 mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '$ROOT_PASSWORD' WITH GRANT OPTION;"
+mysql -u root -e "CREATE DATABASE movie_db;"
 mysql -u root -e "FLUSH PRIVILEGES;"
 
 service mysql restart

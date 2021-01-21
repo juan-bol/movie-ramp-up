@@ -1,7 +1,9 @@
 #!/bin/bash
 
 sudo apt update
-sudo apt install git nodejs npm -y
+sudo apt install curl -y
+curl -sL https://deb.nodesource.com/setup_10.x | sudo bash
+sudo apt install git nodejs -y
 
 # sudo apt install nginx -y
 # sudo cp ./data/proxy /etc/nginx/sites-enabled/

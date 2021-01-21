@@ -7,23 +7,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     servers = [
         {
+            :hostname => "bd",
+            :ip => ".13",
+            :ssh_port => "2203",
+            :provision_file => "./provision/bd.sh"
+        },
+        {
             :hostname => "api",
             :ip => ".11",
             :ssh_port => "2201",
             :provision_file => "./provision/api.sh"
         },
-        # {
-        #     :hostname => "ui",
-        #     :ip => ".12",
-        #     :ssh_port => "2202",
-        #     :provision_file => "./provision/ui.sh"
-        # },
         {
-            :hostname => "bd",
-            :ip => ".13",
-            :ssh_port => "2203",
-            :provision_file => "./provision/bd.sh"
-        }
+            :hostname => "ui",
+            :ip => ".12",
+            :ssh_port => "2202",
+            :provision_file => "./provision/ui.sh"
+        }        
     ]
 
     servers.each do |machine|
