@@ -4,7 +4,7 @@ sudo yum update -y
 sudo yum install jenkins java-1.8.0 git -y
 sudo systemctl daemon-reload
 sudo service jenkins start
-sudo amazon-linux-extras install docker
+sudo amazon-linux-extras install docker -y
 sudo service docker start
 sudo usermod -a -G docker ec2-user
 sudo usermod -a -G docker jenkins
