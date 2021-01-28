@@ -7,3 +7,5 @@ bash data/api.sh
 ps -ef | grep "server.js"  | awk '{print "sudo kill -9 " $2}' | bash
 
 ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'
+
+ docker rm $(docker ps -a -q)
