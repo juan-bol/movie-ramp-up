@@ -1,3 +1,8 @@
+variable "region" {
+    description = "Availability zone"
+    default = "us-west-1"
+}
+
 variable "vpc_id" {
   description = "VPC id for ramp_up_training"
   default = "vpc-0d2831659ef89870c"
