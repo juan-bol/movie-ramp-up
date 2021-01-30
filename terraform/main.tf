@@ -34,14 +34,14 @@ data "http" "myip"{
 
 
 resource "aws_security_group" "rampup_sec_group" {
-    vpc_id = aws_vpc.rampup_vpc.id
+    vpc_id = data.aws_vpc.rampup_vpc.id
 
     ingress {
         description = "Jenkins traffic"
         from_port = 8080
         to_port = 8080
         protocol = "tcp"
-        cidr_blocks = [chomp(http.myip.body)/32]
+        cidr_blocks = [chomp(data.http.myip.body)/32]
     }
 
     ingress {
@@ -49,7 +49,7 @@ resource "aws_security_group" "rampup_sec_group" {
         from_port = 22
         to_port = 22
         protocol = "tcp"
-        cidr_blocks = [chomp(http.myip.body)/32]
+        cidr_blocks = [chomp(data.http.myip.body)/32]
     }
 
     egress {
@@ -67,7 +67,7 @@ resource "aws_security_group" "rampup_sec_group" {
 }
 
 resource "aws_network_interface" "rampup_netin" {
-    subnet_id       = aws_subnet.rampup_subnet.id
+    subnet_id       = data.aws_subnet.rampup_subnet.id
     private_ips     = ["10.1.10.70"]
     security_groups = [aws_security_group.rampup_sec_group.id]
 
@@ -83,14 +83,19 @@ resource "aws_eip" "rampup_elastic_ip" {
     network_interface = aws_network_interface.rampup_netin.id
     associate_with_private_ip = "10.1.10.70"
 
-    depends_on = [aws_internet_gateway.rampup_gw]
+    depends_on = [data.aws_internet_gateway.rampup_gw]
+
+    tags={
+        Name = "ElasticIp-Terra-juan.bolanosr"
+        project : var.project_tag
+        responsible : var.responsible_tag
+    }
 }
 
 resource "aws_instance" "ec2_jenkins" {
     ami = var.ami_linux2
     instance_type = "t2.micro"
     availability_zone = var.region
-    vpc_id = aws_vpc.rampup_vpc.id
     network_interface {
         device_index = 0
         network_interface_id = aws_network_interface.rampup_netin.id
