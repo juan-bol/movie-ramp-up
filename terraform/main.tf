@@ -9,7 +9,7 @@ terraform {
 
 # AWS Provider TODO: access and secret keys must be declared as environment variables (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY)
 provider "aws" {
-  region = var.region
+    region = var.region
 }
 
 data "aws_vpc" "rampup_vpc" {
@@ -21,15 +21,26 @@ data "aws_subnet" "rampup_subnet" {
 }
 
 data "aws_internet_gateway" "rampup_gw" {
-    id = var.internet_gateway_id
+    internet_gateway_id = var.internet_gateway_id
 }
 
 data "aws_route_table" "rampup_route_table" {
-    id = var.route_table_id
+    route_table_id = var.route_table_id
 }
 
-data "http" "myip"{
-    url = "https://ipv4.icanhazip.com"
+data "http" "my_public_ip" {
+    url = "https://ifconfig.co/json"
+    request_headers = {
+        Accept = "application/json"
+    }
+}
+
+locals {
+  ifconfig_co_json = jsondecode(data.http.my_public_ip.body)
+}
+
+output "my_ip_addr" {
+  value = local.ifconfig_co_json.ip
 }
 
 
@@ -41,7 +52,7 @@ resource "aws_security_group" "rampup_sec_group" {
         from_port = 8080
         to_port = 8080
         protocol = "tcp"
-        cidr_blocks = [chomp(data.http.myip.body)/32]
+        cidr_blocks = [format("%s/32",local.ifconfig_co_json.ip)]
     }
 
     ingress {
@@ -49,7 +60,7 @@ resource "aws_security_group" "rampup_sec_group" {
         from_port = 22
         to_port = 22
         protocol = "tcp"
-        cidr_blocks = [chomp(data.http.myip.body)/32]
+        cidr_blocks = [format("%s/32",local.ifconfig_co_json.ip)]
     }
 
     egress {
@@ -61,50 +72,72 @@ resource "aws_security_group" "rampup_sec_group" {
 
     tags = {
         Name = "SecurityGroup-Terra-juan.bolanosr"
-        project : var.project_tag
-        responsible : var.responsible_tag
+        project = var.project_tag
+        responsible = var.responsible_tag
     }
 }
 
-resource "aws_network_interface" "rampup_netin" {
+resource "aws_network_interface" "rampup_network_interface" {
     subnet_id       = data.aws_subnet.rampup_subnet.id
     private_ips     = ["10.1.10.70"]
     security_groups = [aws_security_group.rampup_sec_group.id]
 
     tags = {
         Name = "NetworkInterface-Terra-juan.bolanosr"
-        project : var.project_tag
-        responsible : var.responsible_tag
+        project = var.project_tag
+        responsible = var.responsible_tag
     }
 }
 
 resource "aws_eip" "rampup_elastic_ip" {
     vpc = true
-    network_interface = aws_network_interface.rampup_netin.id
+    network_interface = aws_network_interface.rampup_network_interface.id
     associate_with_private_ip = "10.1.10.70"
 
     depends_on = [data.aws_internet_gateway.rampup_gw]
 
     tags={
         Name = "ElasticIp-Terra-juan.bolanosr"
-        project : var.project_tag
-        responsible : var.responsible_tag
+        project = var.project_tag
+        responsible = var.responsible_tag
     }
+}
+
+resource "aws_ebs_volume" "rampup_volume" {
+    availability_zone = var.availability_zone
+    size = 8
+
+    tags={
+        Name = "Jenkins-Volume-Terra-juan.bolanosr"
+        project = var.project_tag
+        responsible = var.responsible_tag
+    }
+}
+
+resource "aws_volume_attachment" "rampup_vol_att" {
+    device_name = "/dev/sdh"
+    volume_id   = aws_ebs_volume.rampup_volume.id
+    instance_id = aws_instance.ec2_jenkins.id
 }
 
 resource "aws_instance" "ec2_jenkins" {
     ami = var.ami_linux2
     instance_type = "t2.micro"
-    availability_zone = var.region
+    availability_zone = var.availability_zone
+    
     network_interface {
         device_index = 0
-        network_interface_id = aws_network_interface.rampup_netin.id
+        network_interface_id = aws_network_interface.rampup_network_interface.id
     }
 
     tags={
         Name = "Jenkins-EC2-Terra-juan.bolanosr"
-        project : var.project_tag
-        responsible : var.responsible_tag
+        project = var.project_tag
+        responsible = var.responsible_tag
     }
+}
+
+output "jenkins_addr" {
+  value = aws_eip.rampup_elastic_ip.public_ip
 }
 

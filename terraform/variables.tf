@@ -1,6 +1,11 @@
 variable "region" {
-    description = "Availability zone"
+    description = "Region"
     default = "us-west-1"
+}
+
+variable "availability_zone" {
+    description = "Availability zone"
+    default = "us-west-1c"
 }
 
 variable "vpc_id" {
