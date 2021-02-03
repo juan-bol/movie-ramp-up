@@ -30,7 +30,7 @@ variable "route_table_id" {
 
 variable "project_tag" {
     description = "Project tag for every AWS resoruce"
-    default = "ramp-up-devops"
+    default = "ramp_up_devops"
 }
 
 variable "responsible_tag" {
@@ -41,4 +41,9 @@ variable "responsible_tag" {
 variable "ami_linux2" {
     description = "Amazon linux 2 AMI ID"
     default = "ami-005c06c6de69aee84"
+}
+
+variable "key_pair" {
+    description = "Key pair name"
+    default = "key-pair-JB"
 }
