@@ -78,63 +78,20 @@ resource "aws_security_group" "rampup_sec_group" {
     }
 }
 
-# resource "aws_network_interface" "rampup_network_interface" {
-#     subnet_id       = data.aws_subnet.rampup_subnet.id
-#     private_ips     = ["10.1.10.60"]
-#     security_groups = [aws_security_group.rampup_sec_group.id]
-
-#     tags = {
-#         Name = "NetworkInterface-Terra-juan.bolanosr"
-#         project = var.project_tag
-#         responsible = var.responsible_tag
-#     }
-# }
-
-# resource "aws_eip" "rampup_elastic_ip" {
-#     vpc = true
-#     network_interface = aws_network_interface.rampup_network_interface.id
-#     associate_with_private_ip = "10.1.10.60"
-
-#     depends_on = [data.aws_internet_gateway.rampup_gw, aws_instance.ec2_jenkins]
-
-#     tags={
-#         Name = "ElasticIp-Terra-juan.bolanosr"
-#         project = var.project_tag
-#         responsible = var.responsible_tag
-#     }
-# }
-
-# resource "aws_ebs_volume" "rampup_volume" {
-#     availability_zone = var.availability_zone
-#     size = 8
-
-#     tags={
-#         Name = "EBS-Volume-Terra-juan.bolanosr"
-#         project = var.project_tag
-#         responsible = var.responsible_tag
-#     }
-# }
-
-# resource "aws_volume_attachment" "rampup_vol_att" {
-#     device_name = "/dev/sdh"
-#     volume_id   = aws_ebs_volume.rampup_volume.id
-#     instance_id = aws_instance.ec2_jenkins.id
-#     force_detach = true
-# }
+data "local_file" "jenkins_user_data" {
+    filename = "./provision/jenkins.sh"
+}
 
 resource "aws_instance" "ec2_jenkins" {
     ami = var.ami_linux2
     instance_type = "t2.micro"
     availability_zone = var.availability_zone
     key_name = var.key_pair
-    
-    # network_interface {
-    #     device_index = 0
-    #     network_interface_id = aws_network_interface.rampup_network_interface.id
-    # }
 
     vpc_security_group_ids = [ aws_security_group.rampup_sec_group.id ]
     subnet_id = data.aws_subnet.rampup_subnet.id
+
+    user_data = data.local_file.jenkins_user_data.content
 
     volume_tags = {
         Name = "Volume-Terra-juan.bolanosr"
@@ -149,11 +106,6 @@ resource "aws_instance" "ec2_jenkins" {
     }
 }
 
-# output "eip_addr" {
-#   value = aws_eip.rampup_elastic_ip.public_ip
-# }
-
 output "instance_addr" {
   value = aws_instance.ec2_jenkins.public_ip
 }
-
