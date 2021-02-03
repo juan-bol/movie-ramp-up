@@ -92,11 +92,10 @@ resource "aws_security_group" "rampup_sec_group" {
 
 # resource "aws_eip" "rampup_elastic_ip" {
 #     vpc = true
-#     # network_interface = aws_network_interface.rampup_network_interface.id
-#     instance = aws_instance.ec2_jenkins.id
+#     network_interface = aws_network_interface.rampup_network_interface.id
 #     associate_with_private_ip = "10.1.10.60"
 
-#     depends_on = [data.aws_internet_gateway.rampup_gw]
+#     depends_on = [data.aws_internet_gateway.rampup_gw, aws_instance.ec2_jenkins]
 
 #     tags={
 #         Name = "ElasticIp-Terra-juan.bolanosr"
@@ -105,16 +104,16 @@ resource "aws_security_group" "rampup_sec_group" {
 #     }
 # }
 
-resource "aws_ebs_volume" "rampup_volume" {
-    availability_zone = var.availability_zone
-    size = 8
+# resource "aws_ebs_volume" "rampup_volume" {
+#     availability_zone = var.availability_zone
+#     size = 8
 
-    tags={
-        Name = "Jenkins-Volume-Terra-juan.bolanosr"
-        project = var.project_tag
-        responsible = var.responsible_tag
-    }
-}
+#     tags={
+#         Name = "EBS-Volume-Terra-juan.bolanosr"
+#         project = var.project_tag
+#         responsible = var.responsible_tag
+#     }
+# }
 
 # resource "aws_volume_attachment" "rampup_vol_att" {
 #     device_name = "/dev/sdh"
@@ -134,9 +133,14 @@ resource "aws_instance" "ec2_jenkins" {
     #     network_interface_id = aws_network_interface.rampup_network_interface.id
     # }
 
-    # private_ip = "10.1.10.60"
     vpc_security_group_ids = [ aws_security_group.rampup_sec_group.id ]
     subnet_id = data.aws_subnet.rampup_subnet.id
+
+    volume_tags = {
+        Name = "Volume-Terra-juan.bolanosr"
+        project = var.project_tag
+        responsible = var.responsible_tag
+    }
 
     tags={
         Name = "Jenkins-EC2-Terra-juan.bolanosr"

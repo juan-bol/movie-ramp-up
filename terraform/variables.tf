@@ -30,7 +30,7 @@ variable "route_table_id" {
 
 variable "project_tag" {
     description = "Project tag for every AWS resoruce"
-    default = "ramp_up_devops"
+    default = "ramp-up-devops"
 }
 
 variable "responsible_tag" {
