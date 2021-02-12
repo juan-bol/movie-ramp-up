@@ -32,7 +32,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             node.vm.hostname = machine[:hostname]
             node.vm.network "private_network", ip: "#{net_ip}" + machine[:ip]
             node.vm.network "forwarded_port", guest: 22, host: machine[:ssh_port], id: "ssh"
-            node.vm.synced_folder "./data", "/home/vagrant/data"
+            # node.vm.synced_folder "./data", "/home/vagrant/data"
             node.vm.provision "shell", path: machine[:provision_file]
 
             node.vm.provider :virtualbox do |vb|
