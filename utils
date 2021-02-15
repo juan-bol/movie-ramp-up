@@ -8,3 +8,4 @@ docker rm $(docker ps -a -q)
 branch specifier: origin/feat/*
 
 webhook: url ip:8080////github-webhook/ application/json
+install assh agent plugin on jenkins

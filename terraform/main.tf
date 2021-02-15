@@ -44,9 +44,9 @@ output "my_ip_addr" {
 }
 
 
-resource "aws_security_group" "rampup_sec_group" {
+resource "aws_security_group" "rampup_sec_group_jenkins" {
     vpc_id = data.aws_vpc.rampup_vpc.id
-    name = "SecurityGroup-Terra-juan.bolanosr"
+    name = "SecurityGroup-Jenkins-Terra-juan.bolanosr"
 
     ingress {
         description = "Jenkins traffic from my IP"
@@ -65,7 +65,7 @@ resource "aws_security_group" "rampup_sec_group" {
     }
 
     ingress {
-        description = "SSH traffic"
+        description = "SSH traffic from my IP"
         from_port = 22
         to_port = 22
         protocol = "tcp"
@@ -80,7 +80,41 @@ resource "aws_security_group" "rampup_sec_group" {
     }
 
     tags = {
-        Name = "SecurityGroup-Terra-juan.bolanosr"
+        Name = "SecurityGroup-Jenkins-Terra-juan.bolanosr"
+        project = var.project_tag
+        responsible = var.responsible_tag
+    }
+}
+
+resource "aws_security_group" "rampup_sec_group_ansible" {
+    vpc_id = data.aws_vpc.rampup_vpc.id
+    name = "SecurityGroup-Ansible-Terra-juan.bolanosr"
+
+    ingress {
+        description = "SSH traffic from jenkins"
+        from_port = 22
+        to_port = 22
+        protocol = "tcp"
+        cidr_blocks = [format("%s/32",aws_instance.ec2_jenkins.private_ip)]
+    }
+
+    ingress {
+        description = "SSH traffic from my IP"
+        from_port = 22
+        to_port = 22
+        protocol = "tcp"
+        cidr_blocks = [format("%s/32",local.ifconfig_co_json.ip)]
+    }
+
+    egress {
+        from_port = 0
+        to_port = 0
+        protocol = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    tags = {
+        Name = "SecurityGroup-Ansible-Terra-juan.bolanosr"
         project = var.project_tag
         responsible = var.responsible_tag
     }
@@ -90,19 +124,23 @@ data "local_file" "jenkins_user_data" {
     filename = "./provision/jenkins.sh"
 }
 
+data "local_file" "ansible_user_data" {
+    filename = "./provision/ansible.sh"
+}
+
 resource "aws_instance" "ec2_jenkins" {
     ami = var.ami_linux2
     instance_type = "t2.micro"
     availability_zone = var.availability_zone
     key_name = var.key_pair
 
-    vpc_security_group_ids = [ aws_security_group.rampup_sec_group.id ]
+    vpc_security_group_ids = [ aws_security_group.rampup_sec_group_jenkins.id ]
     subnet_id = data.aws_subnet.rampup_subnet.id
 
     user_data = data.local_file.jenkins_user_data.content
 
     volume_tags = {
-        Name = "Volume-Terra-juan.bolanosr"
+        Name = "Volume-Jenkins-Terra-juan.bolanosr"
         project = var.project_tag
         responsible = var.responsible_tag
     }
@@ -114,6 +152,38 @@ resource "aws_instance" "ec2_jenkins" {
     }
 }
 
-output "instance_addr" {
+resource "aws_instance" "ec2_ansible" {
+    ami = var.ami_linux2
+    instance_type = "t2.micro"
+    availability_zone = var.availability_zone
+    key_name = var.key_pair
+
+    vpc_security_group_ids = [ aws_security_group.rampup_sec_group_ansible.id ]
+    subnet_id = data.aws_subnet.rampup_subnet.id
+
+    user_data = data.local_file.ansible_user_data.content
+
+    volume_tags = {
+        Name = "Volume-Ansible-Terra-juan.bolanosr"
+        project = var.project_tag
+        responsible = var.responsible_tag
+    }
+
+    tags={
+        Name = "Ansible-EC2-Terra-juan.bolanosr"
+        project = var.project_tag
+        responsible = var.responsible_tag
+    }
+}
+
+output "jenkins_public_addr" {
   value = aws_instance.ec2_jenkins.public_ip
+}
+
+output "ansible_private_addr" {
+  value = aws_instance.ec2_ansible.private_ip
+}
+
+output "ansible_public_addr" {
+  value = aws_instance.ec2_ansible.public_ip
 }
