@@ -5,7 +5,7 @@ variable "region" {
 
 variable "availability_zone" {
     description = "Availability zone"
-    default = "us-west-1c"
+    default = "us-west-1a"
 }
 
 variable "vpc_id" {
@@ -13,9 +13,14 @@ variable "vpc_id" {
   default = "vpc-0d2831659ef89870c"
 }
 
-variable "subnet_id" {
-  description = "Subnet id for ramp_up_training-public-1"
-  default = "subnet-055c41fce697f9cca"
+variable "public_subnet_id" {
+  description = "Subnet id for ramp_up_training-public-0"
+  default = "subnet-0088df5de3a4fe490"
+}
+
+variable "private_subnet_id" {
+  description = "Subnet id for ramp_up_training-private-0"
+  default = "subnet-0088df5de3a4fe490"
 }
 
 variable "internet_gateway_id" {
