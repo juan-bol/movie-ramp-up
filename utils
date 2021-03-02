@@ -5,7 +5,13 @@ ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}
 
 docker rm $(docker ps -a -q)
 
-branch specifier: origin/feat/*
+#jenkins
+webhook --> ip:8080/github-webhook/ application/json
+branch specifier: origin/feat/* or */feat/*
+install ssh agent plugin on jenkins
+add pem credential https://support.cloudbees.com/hc/en-us/articles/360029470091-How-to-use-the-SSH-Agent-Plugin?page=24
 
-webhook: url ip:8080////github-webhook/ application/json
-install assh agent plugin on jenkins
+# ansible playbooks
+copy pem to ansible
+ansible-playbook add-key.yml -i ansible_hosts --key-file ~/key-pair-JB.pem
+ansible-playbook main.yml -i ansible_hosts

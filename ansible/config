@@ -1,0 +1,9 @@
+Host front
+        Hostname 10.1.3.138
+        User ec2-user
+
+Host back
+        Hostname 10.1.4.47
+        User ec2-user
+        ProxyCommand ssh -q -W %h:%p front
+        
