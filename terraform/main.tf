@@ -233,13 +233,13 @@ resource "aws_instance" "ec2_front" {
     subnet_id = data.aws_subnet.rampup_public_subnet.id
 
     volume_tags = {
-        Name = "Volume-Ansible-Terra-juan.bolanosr"
+        Name = "Volume-Front-Terra-juan.bolanosr"
         project = var.project_tag
         responsible = var.responsible_tag
     }
 
     tags={
-        Name = "Ansible-EC2-Terra-juan.bolanosr"
+        Name = "Front-EC2-Terra-juan.bolanosr"
         project = var.project_tag
         responsible = var.responsible_tag
     }
