@@ -1,0 +1,8 @@
+---
+- name: "Install common packages"
+  hosts: servers
+  tasks:
+    - name: update all packages
+      yum: name=* state=latest
+    - name: install git
+      yum: name=git state=latest

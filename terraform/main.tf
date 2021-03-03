@@ -16,8 +16,12 @@ data "aws_vpc" "rampup_vpc" {
     id = var.vpc_id
 }
 
-data "aws_subnet" "rampup_subnet" {
-    id = var.subnet_id
+data "aws_subnet" "rampup_public_subnet" {
+    id = var.public_subnet_id
+}
+
+data "aws_subnet" "rampup_private_subnet" {
+    id = var.private_subnet_id
 }
 
 data "aws_internet_gateway" "rampup_gw" {
@@ -120,6 +124,49 @@ resource "aws_security_group" "rampup_sec_group_ansible" {
     }
 }
 
+resource "aws_security_group" "rampup_sec_group_hosts" {
+    vpc_id = data.aws_vpc.rampup_vpc.id
+    name = "SecurityGroup-Hosts-Terra-juan.bolanosr"
+
+    ingress {
+        description = "ICMP traffic from Ansible"
+        from_port = -1
+        to_port = -1
+        protocol = "icmp"
+        cidr_blocks = [data.aws_vpc.rampup_vpc.cidr_block]
+
+    }
+
+    ingress {
+        description = "SSH traffic from my IP"
+        from_port = 22
+        to_port = 22
+        protocol = "tcp"
+        cidr_blocks = [format("%s/32",local.ifconfig_co_json.ip)]
+    }
+
+    ingress {
+        description = "SSH traffic from Ansible"
+        from_port = 22
+        to_port = 22
+        protocol = "tcp"
+        cidr_blocks = [data.aws_vpc.rampup_vpc.cidr_block]
+    }
+
+    egress {
+        from_port = 0
+        to_port = 0
+        protocol = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    tags = {
+        Name = "SecurityGroup-Hosts-Terra-juan.bolanosr"
+        project = var.project_tag
+        responsible = var.responsible_tag
+    }
+}
+
 data "local_file" "jenkins_user_data" {
     filename = "./provision/jenkins.sh"
 }
@@ -135,7 +182,7 @@ resource "aws_instance" "ec2_jenkins" {
     key_name = var.key_pair
 
     vpc_security_group_ids = [ aws_security_group.rampup_sec_group_jenkins.id ]
-    subnet_id = data.aws_subnet.rampup_subnet.id
+    subnet_id = data.aws_subnet.rampup_public_subnet.id
 
     user_data = data.local_file.jenkins_user_data.content
 
@@ -159,7 +206,7 @@ resource "aws_instance" "ec2_ansible" {
     key_name = var.key_pair
 
     vpc_security_group_ids = [ aws_security_group.rampup_sec_group_ansible.id ]
-    subnet_id = data.aws_subnet.rampup_subnet.id
+    subnet_id = data.aws_subnet.rampup_public_subnet.id
 
     user_data = data.local_file.ansible_user_data.content
 
@@ -176,14 +223,66 @@ resource "aws_instance" "ec2_ansible" {
     }
 }
 
+resource "aws_instance" "ec2_front" {
+    ami = var.ami_linux2
+    instance_type = "t2.micro"
+    availability_zone = var.availability_zone
+    key_name = var.key_pair
+
+    vpc_security_group_ids = [ aws_security_group.rampup_sec_group_hosts.id ]
+    subnet_id = data.aws_subnet.rampup_public_subnet.id
+
+    volume_tags = {
+        Name = "Volume-Front-Terra-juan.bolanosr"
+        project = var.project_tag
+        responsible = var.responsible_tag
+    }
+
+    tags={
+        Name = "Front-EC2-Terra-juan.bolanosr"
+        project = var.project_tag
+        responsible = var.responsible_tag
+    }
+}
+
+resource "aws_instance" "ec2_back" {
+    ami = var.ami_linux2
+    instance_type = "t2.micro"
+    availability_zone = var.availability_zone
+    key_name = var.key_pair
+
+    vpc_security_group_ids = [ aws_security_group.rampup_sec_group_hosts.id ]
+    subnet_id = data.aws_subnet.rampup_private_subnet.id
+
+    volume_tags = {
+        Name = "Volume-Back-Terra-juan.bolanosr"
+        project = var.project_tag
+        responsible = var.responsible_tag
+    }
+
+    tags={
+        Name = "Back-EC2-Terra-juan.bolanosr"
+        project = var.project_tag
+        responsible = var.responsible_tag
+    }
+}
+
 output "jenkins_public_addr" {
   value = aws_instance.ec2_jenkins.public_ip
 }
 
-output "ansible_private_addr" {
-  value = aws_instance.ec2_ansible.private_ip
-}
-
 output "ansible_public_addr" {
   value = aws_instance.ec2_ansible.public_ip
+}
+
+output "front_public_addr" {
+    value = aws_instance.ec2_front.public_ip
+}
+
+output "front_private_addr" {
+    value = aws_instance.ec2_front.private_ip
+}
+
+output "back_private_addr" {
+    value = aws_instance.ec2_back.private_ip
 }
