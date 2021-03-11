@@ -275,6 +275,10 @@ output "ansible_public_addr" {
   value = aws_instance.ec2_ansible.public_ip
 }
 
+output "ansible_private_addr" {
+  value = aws_instance.ec2_ansible.private_ip
+}
+
 output "front_public_addr" {
     value = aws_instance.ec2_front.public_ip
 }

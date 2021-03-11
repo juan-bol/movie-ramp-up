@@ -20,7 +20,7 @@ variable "public_subnet_id" {
 
 variable "private_subnet_id" {
   description = "Subnet id for ramp_up_training-private-0"
-  default = "subnet-0088df5de3a4fe490"
+  default = "subnet-0d74b59773148d704"
 }
 
 variable "internet_gateway_id" {
