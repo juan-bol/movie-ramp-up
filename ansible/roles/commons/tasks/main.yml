@@ -1,11 +1,6 @@
----
-- name: "Install common packages"
-  hosts: all
-  tasks:
-    - name: update all packages
-      yum: name=* state=latest
-    - name: install git
-      yum:
-        name: "{{ item }}"
-        state: present
-      with_items: "{{ packages }}"
+- name: update all packages
+  yum: name=* state=latest
+- name: install common packages
+  yum:
+    name: "{{ packages }}"
+    state: present
