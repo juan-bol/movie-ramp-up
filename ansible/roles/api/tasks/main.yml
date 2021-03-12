@@ -1,7 +1,7 @@
 ---
 - name: update all packages
   yum: name=* state=latest
-- name: install common packages
+- name: install api packages
   yum:
-    name: "{{ common_packages }}"
+    name: "{{ api_packages }}"
     state: present

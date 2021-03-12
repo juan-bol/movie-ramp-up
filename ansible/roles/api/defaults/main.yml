@@ -1,0 +1,6 @@
+---
+api_packages:
+- software-properties-common
+- net-tools
+- nodejs
+- mariadb-client
