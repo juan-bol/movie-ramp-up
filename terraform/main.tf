@@ -224,7 +224,7 @@ resource "aws_instance" "ec2_ansible" {
 }
 
 resource "aws_instance" "ec2_front" {
-    ami = var.ami_linux2
+    ami = var.ami_ubuntu1804
     instance_type = "t2.micro"
     availability_zone = var.availability_zone
     key_name = var.key_pair
@@ -246,7 +246,7 @@ resource "aws_instance" "ec2_front" {
 }
 
 resource "aws_instance" "ec2_back" {
-    ami = var.ami_linux2
+    ami = var.ami_ubuntu1804
     instance_type = "t2.micro"
     availability_zone = var.availability_zone
     key_name = var.key_pair

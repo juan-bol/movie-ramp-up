@@ -1,10 +1,11 @@
 ---
 - name: update all packages
-  yum: name=* state=latest
+  apt: name=* state=latest
 - name: install bd packages
-  yum:
+  apt:
     name: "{{ bd_packages }}"
     state: present
+  become: yes
 - name: run mysql installation
   script: 
     cmd: mysql_installation.sh

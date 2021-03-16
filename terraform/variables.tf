@@ -48,6 +48,11 @@ variable "ami_linux2" {
     default = "ami-005c06c6de69aee84"
 }
 
+variable "ami_ubuntu1804" {
+    description = "Ubuntu AMI ID"
+    default = "ami-0121ef35996ede438"
+}
+
 variable "key_pair" {
     description = "Key pair name"
     default = "key-pair-JB"

@@ -1,6 +1,6 @@
 ---
 - name: "Playbook to Add Key to Newly Provisioned EC2 Instance"
-  hosts: servers
+  hosts: all
   vars:
     - status : "present"
     - key : "~/.ssh/id_rsa.pub"
@@ -9,6 +9,6 @@
 
   - name: "Copy the authorized key file from"
     authorized_key:
-      user: "ec2-user"
+      user: "ubuntu"
       state: "{{status}}"
       key: "{{ lookup('file', '{{ key }}')}}"
