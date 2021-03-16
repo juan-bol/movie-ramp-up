@@ -1,6 +1,7 @@
 ---
 - name: update all packages
   apt: name=* state=latest
+  become: yes
 - name: install common packages
   apt:
     name: "{{ common_packages }}"
