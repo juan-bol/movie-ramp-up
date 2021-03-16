@@ -3,7 +3,7 @@
   yum: name=* state=latest
 - name: get nodejs repository
   shell:
-    cmd: curl -sL https://deb.nodesource.com/setup_10.x | sudo bash
+    cmd: curl -sL https://rpm.nodesource.com/setup_10.x | sudo bash
 - name: install api packages
   yum:
     name: "{{ api_packages }}"
