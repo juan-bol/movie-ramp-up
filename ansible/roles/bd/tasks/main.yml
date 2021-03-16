@@ -1,0 +1,14 @@
+---
+- name: update all packages
+  yum: name=* state=latest
+- name: install bd packages
+  yum:
+    name: "{{ bd_packages }}"
+    state: present
+- name: run mysql installation
+  script: 
+    cmd: mysql_installation.sh
+- name: Restart service httpd, in all cases
+  ansible.builtin.service:
+    name: mysql
+    state: restarted

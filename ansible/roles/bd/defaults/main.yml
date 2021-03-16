@@ -1,0 +1,4 @@
+---
+bd_packages:
+- mariadb-server
+- expect

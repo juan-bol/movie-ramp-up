@@ -1,0 +1,25 @@
+---
+- name: update all packages
+  yum: name=* state=latest
+- name: get nodejs repository
+  shell:
+    cmd: curl -sL https://deb.nodesource.com/setup_10.x | sudo bash
+- name: install ui packages
+  yum:
+    name: "{{ ui_packages }}"
+    state: present
+- name: get nodejs repository
+  shell:
+    cmd: curl -sL https://deb.nodesource.com/setup_10.x | sudo bash
+- name: git checkout
+  git:
+    repo: 'https://github.com/juan-bol/movie-analyst-ui.git'
+    dest: ~/
+- name: Change working directory to /movie-analyst-ui and install app packages
+  shell:
+    cmd: npm install
+    chdir: /movie-analyst-ui
+- name: Change working directory to /movie-analyst-ui and run app
+  shell:
+    cmd: node server.js &
+    chdir: /movie-analyst-ui
