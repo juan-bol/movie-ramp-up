@@ -15,10 +15,9 @@ add pem credential https://support.cloudbees.com/hc/en-us/articles/360029470091-
 copy pem to ansible
 chmod 400 <>.pem
 ssh-keygen
-ansible-playbook add-key.yml -i inventory.py --key-file ~/key-pair-JB.pem
-ansible-playbook playbook.yml -i inventory.py
+ansible-playbook add-key.yml -i ec2.py -l tag_Name_Front_EC2_Terra_juan_bolanosr,tag_Name_Back_EC2_Terra_juan_bolanosr --key-file ~/key-pair-JB.pem --user ubuntu
+ansible-playbook ui.yml -i ec2.py -l tag_Name_Front_EC2_Terra_juan_bolanosr
 
 # ansible dynamic inventory repo: ec2.py, ec2.ini
 https://github.com/ansible/ansible/tree/stable-2.9/contrib/inventory
 
-ansible-playbook ui.yml -i ec2.py -l tag_Name_Front_EC2_Terra_juan_bolanosr

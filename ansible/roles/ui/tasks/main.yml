@@ -4,7 +4,7 @@
   become: yes
 - name: get nodejs repository
   shell:
-    cmd: curl -sL https://rpm.nodesource.com/setup_10.x | sudo bash
+    cmd: curl -sL https://deb.nodesource.com/setup_10.x | sudo bash
 - name: install ui packages
   apt:
     name: "{{ ui_packages }}"
