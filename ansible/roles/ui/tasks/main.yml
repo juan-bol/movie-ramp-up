@@ -10,15 +10,18 @@
     name: "{{ ui_packages }}"
     state: present
   become: yes
+# - name: git checkout
+#   git:
+#     repo: 'https://github.com/juan-bol/movie-analyst-ui.git'
+#     dest: ~/
 - name: git checkout
-  git:
-    repo: 'https://github.com/juan-bol/movie-analyst-ui.git'
-    dest: ~/
+  shell:
+    cmd: if [ -d ./movie-analyst-ui ]; then cd movie-analyst-ui && git pull; else git clone https://github.com/juan-bol/movie-analyst-ui.git; fi
 - name: Change working directory to /movie-analyst-ui and install app packages
   shell:
     cmd: npm install
-    chdir: /movie-analyst-ui
+    # chdir: /movie-analyst-ui
 - name: Change working directory to /movie-analyst-ui and run app
   shell:
     cmd: node server.js &
-    chdir: /movie-analyst-ui
+    # chdir: /movie-analyst-ui

@@ -10,22 +10,25 @@
     name: "{{ api_packages }}"
     state: present
   become: yes
+# - name: git checkout
+#   git:
+#     repo: 'https://github.com/juan-bol/movie-analyst-api.git'
+#     dest: ~/
 - name: git checkout
-  git:
-    repo: 'https://github.com/juan-bol/movie-analyst-api.git'
-    dest: ~/
+  shell:
+    cmd: if [ -d ./movie-analyst-api ]; then cd movie-analyst-api && git pull; else git clone https://github.com/juan-bol/movie-analyst-api.git; fi
 - name: Change working directory to /movie-analyst-api and install app packages
   shell:
     cmd: npm install
-    chdir: /movie-analyst-api
-- name: Populate data base
-  shell:
-    cmd: mysql -h 192.168.100.13 -P 3306 --user="root" --password="holi" movie_db < ./data_model/table_creation_and_inserts.sql
+    # chdir: /movie-analyst-api
+# - name: Populate data base
+#   shell:
+#     cmd: mysql -h 192.168.100.13 -P 3306 --user="root" --password="holi" movie_db < ./data_model/table_creation_and_inserts.sql
 - name: Change working directory to /movie-analyst-api and create data base password file
   shell:
     cmd: echo "holi" >> .secrets
-    chdir: /movie-analyst-api
+    # chdir: /movie-analyst-api
 - name: Change working directory to /movie-analyst-api and run app
   shell:
     cmd: sudo node server.js &
-    chdir: /movie-analyst-api
+    # chdir: /movie-analyst-api

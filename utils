@@ -16,8 +16,10 @@ copy pem to ansible
 chmod 400 <>.pem
 ssh-keygen
 ansible-playbook add-key.yml -i ec2.py -l tag_Name_Front_EC2_Terra_juan_bolanosr,tag_Name_Back_EC2_Terra_juan_bolanosr --key-file ~/key-pair-JB.pem --user ubuntu
-ansible-playbook ui.yml -i ec2.py -l tag_Name_Front_EC2_Terra_juan_bolanosr
+ansible-playbook ui.yml -i ec2.py -l tag_Name_Front_EC2_Terra_juan_bolanosr --user ubuntu
+ansible-playbook api.yml -i ec2.py -l tag_Name_Back_EC2_Terra_juan_bolanosr --user ubuntu
 
 # ansible dynamic inventory repo: ec2.py, ec2.ini
 https://github.com/ansible/ansible/tree/stable-2.9/contrib/inventory
 
+terraform apply -target=aws_security_group.rampup_sec_group_jenkins -target=aws_security_group.rampup_sec_group_ansible -target=aws_security_group.rampup_sec_group_hosts
