@@ -20,8 +20,8 @@
 - name: Change working directory to /movie-analyst-ui and install app packages
   shell:
     cmd: npm install
-    # chdir: /movie-analyst-ui
+    chdir: /movie-analyst-ui
 - name: Change working directory to /movie-analyst-ui and run app
   shell:
     cmd: node server.js &
-    # chdir: /movie-analyst-ui
+    chdir: /movie-analyst-ui
