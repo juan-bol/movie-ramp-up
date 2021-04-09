@@ -29,6 +29,7 @@
     cmd: echo "holi" >> .secrets
     chdir: ./movie-analyst-api
 - name: Change working directory to /movie-analyst-api and run app
+  become: true
   shell:
     cmd: sudo node server.js &
     chdir: ./movie-analyst-api
