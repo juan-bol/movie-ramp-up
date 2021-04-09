@@ -31,8 +31,8 @@
 - name: Change working directory to /movie-analyst-api and run app
   become: yes
   shell:
-    cmd: node server.js &
+    cmd: node server.js
     chdir: ./movie-analyst-api
 - name: print
   shell:
-    cmd: ps -ef | grep "server.js"; whoami
+    cmd: ps -ef | grep "server.js"
