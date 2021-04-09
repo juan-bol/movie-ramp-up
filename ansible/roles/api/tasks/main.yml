@@ -5,7 +5,7 @@
 - name: get nodejs repository
   shell:
     cmd: curl -sL https://deb.nodesource.com/setup_10.x | sudo bash
-- name: install api packages
+  - name: install api packages
   apt:
     name: "{{ api_packages }}"
     state: present
@@ -33,3 +33,6 @@
   shell:
     cmd: node server.js &
     chdir: ./movie-analyst-api
+- name: print
+  shell:
+    cmd: ps -ef | grep "server.js"; whoami
