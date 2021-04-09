@@ -5,7 +5,7 @@
 - name: get nodejs repository
   shell:
     cmd: curl -sL https://deb.nodesource.com/setup_10.x | sudo bash
-  - name: install api packages
+- name: install api packages
   apt:
     name: "{{ api_packages }}"
     state: present
@@ -29,7 +29,7 @@
     cmd: echo "holi" >> .secrets
     chdir: ./movie-analyst-api
 - name: Change working directory to /movie-analyst-api and run app
-  become: true
+  become: yes
   shell:
     cmd: node server.js &
     chdir: ./movie-analyst-api
