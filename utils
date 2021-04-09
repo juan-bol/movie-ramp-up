@@ -8,7 +8,7 @@ docker rm $(docker ps -a -q)
 #jenkins
 webhook --> ip:8080/github-webhook/ application/json
 branch specifier: origin/feat/* or */feat/*
-install ssh agent plugin on jenkins
+install ssh agent and aws steps plugins on jenkins
 add pem credential https://support.cloudbees.com/hc/en-us/articles/360029470091-How-to-use-the-SSH-Agent-Plugin?page=24
 
 # ansible playbooks
